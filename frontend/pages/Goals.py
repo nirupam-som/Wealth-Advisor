@@ -33,7 +33,7 @@ with st.expander("➕  Create New Goal", expanded=False):
         g_col1, g_col2 = st.columns(2)
         with g_col1:
             goal_name = st.text_input("Goal Name", placeholder="e.g. Emergency Fund")
-            target_amount = st.number_input("Target Amount ($)", min_value=1.0, value=5000.0, step=100.0)
+            target_amount = st.number_input("Target Amount (₹)", min_value=1.0, value=5000.0, step=100.0)
         with g_col2:
             deadline = st.date_input("Target Date", value=date(2027, 1, 1), min_value=date.today())
             priority = st.selectbox("Priority", ["high", "medium", "low"], index=1)
@@ -155,11 +155,11 @@ for idx, goal in enumerate(goals):
                 <div style="display:flex;justify-content:space-between;align-items:center;">
                     <div>
                         <span style="color:#9999BB;font-size:0.78rem;">Current</span>
-                        <p style="margin:0;font-weight:700;color:{COLORS['accent']};">${current:,.2f}</p>
+                        <p style="margin:0;font-weight:700;color:{COLORS['accent']};">₹{current:,.2f}</p>
                     </div>
                     <div style="text-align:right;">
                         <span style="color:#9999BB;font-size:0.78rem;">Target</span>
-                        <p style="margin:0;font-weight:700;color:{COLORS['text']};">${target:,.2f}</p>
+                        <p style="margin:0;font-weight:700;color:{COLORS['text']};">₹{target:,.2f}</p>
                     </div>
                 </div>
             </div>
@@ -194,9 +194,9 @@ for idx, goal in enumerate(goals):
                 e1, e2 = st.columns(2)
                 with e1:
                     new_name = st.text_input("Name", value=name, key=f"ename_{goal_id}")
-                    new_target = st.number_input("Target ($)", value=float(target), min_value=1.0, step=100.0, key=f"etarget_{goal_id}")
+                    new_target = st.number_input("Target (₹)", value=float(target), min_value=1.0, step=100.0, key=f"etarget_{goal_id}")
                 with e2:
-                    new_current = st.number_input("Current ($)", value=float(current), min_value=0.0, step=50.0, key=f"ecurrent_{goal_id}")
+                    new_current = st.number_input("Current (₹)", value=float(current), min_value=0.0, step=50.0, key=f"ecurrent_{goal_id}")
                     new_priority = st.selectbox("Priority", ["high", "medium", "low"],
                                                 index=["high", "medium", "low"].index(priority), key=f"eprio_{goal_id}")
                 save = st.form_submit_button("💾  Save Changes", use_container_width=True)

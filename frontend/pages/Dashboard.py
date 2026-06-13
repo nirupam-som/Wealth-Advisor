@@ -65,12 +65,12 @@ savings_rate = (net_savings / total_income * 100) if total_income else 0
 # ── Top Metric Row ───────────────────────────────────────────────────────────
 m1, m2, m3, m4 = st.columns(4)
 with m1:
-    st.metric("💰 Total Income", f"${total_income:,.2f}")
+    st.metric("💰 Total Income", f"₹{total_income:,.2f}")
 with m2:
-    st.metric("💸 Total Expenses", f"${total_expenses:,.2f}")
+    st.metric("💸 Total Expenses", f"₹{total_expenses:,.2f}")
 with m3:
     delta_color = "normal" if net_savings >= 0 else "inverse"
-    st.metric("📈 Net Savings", f"${net_savings:,.2f}", delta_color=delta_color)
+    st.metric("📈 Net Savings", f"₹{net_savings:,.2f}", delta_color=delta_color)
 with m4:
     st.metric("🏦 Savings Rate", f"{savings_rate:.1f}%")
 
@@ -168,7 +168,7 @@ if transactions:
                     **PLOTLY_LAYOUT,
                     height=380,
                     xaxis_title="Month",
-                    yaxis_title="Spending ($)",
+                    yaxis_title="Spending (₹)",
                     xaxis=dict(gridcolor="rgba(108,99,255,0.08)"),
                     yaxis=dict(gridcolor="rgba(108,99,255,0.08)"),
                 )
@@ -201,7 +201,7 @@ if transactions:
             barmode="group",
             height=360,
             xaxis_title="Month",
-            yaxis_title="Amount ($)",
+            yaxis_title="Amount (₹)",
             xaxis=dict(gridcolor="rgba(108,99,255,0.08)"),
             yaxis=dict(gridcolor="rgba(108,99,255,0.08)"),
         )
@@ -216,7 +216,7 @@ if transactions:
     if "date" in display_df.columns:
         display_df["date"] = display_df["date"].dt.strftime("%Y-%m-%d")
     if "amount" in display_df.columns:
-        display_df["amount"] = display_df["amount"].apply(lambda x: f"${x:,.2f}")
+        display_df["amount"] = display_df["amount"].apply(lambda x: f"₹{x:,.2f}")
     display_df.columns = [c.title() for c in display_df.columns]
 
     st.dataframe(

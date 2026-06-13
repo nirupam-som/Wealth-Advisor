@@ -56,8 +56,8 @@ with st.sidebar:
     )
 
 # ── Fetch live data (graceful fallback) ───────────────────────────────────────
-balance = "$124,850"
-spending = "$3,420"
+balance = "₹1,24,850"
+spending = "₹3,420"
 savings_rate = "28%"
 risk_score = "72"
 backend_online = False
@@ -71,8 +71,8 @@ try:
             total_expenses = data.get("total_expenses", 0)
             net = total_income - total_expenses
             rate = (net / total_income * 100) if total_income else 0
-            balance = f"${net:,.0f}"
-            spending = f"${total_expenses:,.0f}"
+            balance = f"₹{net:,.0f}"
+            spending = f"₹{total_expenses:,.0f}"
             savings_rate = f"{rate:.0f}%"
             backend_online = True
         # risk score
