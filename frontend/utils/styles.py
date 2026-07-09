@@ -446,6 +446,6 @@ def glass_card(content_html: str, extra_style: str = ""):
 def api_url(path: str) -> str:
     """Return the full backend API URL for a given path."""
     import os
-    base = os.environ.get("BACKEND_URL", "http://localhost:8000").rstrip("/")
+    base = os.environ.get("BACKEND_URL", "https://wealth-advisor-backend-7kfe.onrender.com").rstrip("/")
     path = path.lstrip("/")
     return f"{base}/{path}"
