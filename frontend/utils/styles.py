@@ -445,6 +445,7 @@ def glass_card(content_html: str, extra_style: str = ""):
 
 def api_url(path: str) -> str:
     """Return the full backend API URL for a given path."""
-    base = "http://localhost:8000"
+    import os
+    base = os.environ.get("BACKEND_URL", "http://localhost:8000").rstrip("/")
     path = path.lstrip("/")
     return f"{base}/{path}"

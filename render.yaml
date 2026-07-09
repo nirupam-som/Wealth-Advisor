@@ -1,0 +1,40 @@
+# render.yaml — Render Blueprint for AI Wealth Advisor
+# Deploy both the FastAPI backend and Streamlit frontend as web services.
+
+services:
+  # ── FastAPI Backend ──────────────────────────────────────────────
+  - type: web
+    name: wealth-advisor-backend
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MISTRAL_API_KEY
+        sync: false  # Set manually in Render dashboard
+      - key: DATABASE_URL
+        value: sqlite:///./data/wealth_advisor.db
+      - key: CHROMA_PERSIST_DIR
+        value: ./data/chroma_db
+      - key: UPLOAD_DIR
+        value: ./storage/uploads
+      - key: DEBUG
+        value: "false"
+      - key: PYTHON_VERSION
+        value: "3.12.0"
+
+  # ── Streamlit Frontend ──────────────────────────────────────────
+  - type: web
+    name: wealth-advisor-frontend
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run frontend/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          name: wealth-advisor-backend
+          type: web
+          property: hostport
+      - key: PYTHON_VERSION
+        value: "3.12.0"
