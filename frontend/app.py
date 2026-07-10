@@ -55,34 +55,59 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-# ── Fetch live data (graceful fallback) ───────────────────────────────────────
+# ── Fetch live data (Render cold-start friendly) ──────────────────────────────
+import time
+
 balance = "₹1,24,850"
 spending = "₹3,420"
 savings_rate = "28%"
 risk_score = "72"
 backend_online = False
 
-try:
-    with httpx.Client(timeout=4) as client:
-        resp = client.get(api_url("transactions/summary"))
-        if resp.status_code == 200:
-            data = resp.json()
-            total_income = data.get("total_income", 0)
-            total_expenses = data.get("total_expenses", 0)
-            net = total_income - total_expenses
-            rate = (net / total_income * 100) if total_income else 0
-            balance = f"₹{net:,.0f}"
-            spending = f"₹{total_expenses:,.0f}"
-            savings_rate = f"{rate:.0f}%"
-            backend_online = True
-        # risk score
-        resp2 = client.get(api_url("insights/risk-score"))
-        if resp2.status_code == 200:
-            risk_data = resp2.json()
-            risk_score = str(risk_data.get("score", risk_score))
-            backend_online = True
-except Exception:
-    pass
+# Show loading spinner while waiting for backend
+loading_placeholder = st.empty()
+
+with loading_placeholder.container():
+    with st.spinner("Connecting to backend... (this may take 30-60 seconds on first load)"):
+        for attempt in range(6):
+            try:
+                with httpx.Client(timeout=20) as client:
+
+                    # Wake backend by requesting summary
+                    resp = client.get(api_url("transactions/summary"))
+
+                    if resp.status_code == 200:
+                        data = resp.json()
+
+                        total_income = data.get("total_income", 0)
+                        total_expenses = data.get("total_expenses", 0)
+
+                        net = total_income - total_expenses
+                        rate = (net / total_income * 100) if total_income else 0
+
+                        balance = f"₹{net:,.0f}"
+                        spending = f"₹{total_expenses:,.0f}"
+                        savings_rate = f"{rate:.0f}%"
+
+                        # Fetch risk score
+                        resp2 = client.get(api_url("insights/risk-score"))
+
+                        if resp2.status_code == 200:
+                            risk_data = resp2.json()
+                            risk_score = str(
+                                risk_data.get("score", risk_score)
+                            )
+
+                        backend_online = True
+                        break
+
+            except Exception:
+                pass
+
+            # Wait before retrying
+            time.sleep(5)
+
+loading_placeholder.empty()
 
 # ── Hero Section ──────────────────────────────────────────────────────────────
 st.markdown(
