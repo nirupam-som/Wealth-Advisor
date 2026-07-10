@@ -71,7 +71,7 @@ with loading_placeholder.container():
     with st.spinner("Connecting to backend... (this may take 30-60 seconds on first load)"):
         for attempt in range(6):
             try:
-                with httpx.Client(timeout=60) as client:
+                with httpx.Client(timeout=120) as client:
 
                     # Wake backend by requesting summary
                     resp = client.get(api_url("transactions/summary"))
