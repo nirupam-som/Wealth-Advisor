@@ -105,7 +105,7 @@ with loading_placeholder.container():
                 pass
 
             # Wait before retrying
-            time.sleep(5)
+            time.sleep(20)
 
 loading_placeholder.empty()
 
